@@ -34,7 +34,7 @@ int main() {
   test("ab", a, b);
   test("bc", b, c);
   test("bd", b, d);
-  test("db", b, d);
+  test("db", d, b);
   test("ca", c, a);
   test("cc", c, c);
   return 0;

@@ -14,13 +14,13 @@ program1: program1.s main.c
 	$(CC) -g -o program1 main.c program1.s
 
 program2: program2.s main.c
-	$(CC) -o program2 main.c program2.s
+	$(CC) -g -o program2 main.c program2.s
 
 program3: program3.s main.c
 	$(CC) -o program3 main.c program3.s
 
 program4: program4.s main.c
-	$(CC) -o program4 main.c program4.s
+	$(CC) -g -o program4 main.c program4.s
 
 program5: program5.s main.c
 	$(CC) -o program5 main.c program5.s

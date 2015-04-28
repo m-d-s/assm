@@ -26,7 +26,7 @@ program5: program5.s main.c
 	$(CC) -o program5 main.c program5.s
 
 program6: program6.s main.c
-	$(CC) -o program6 main.c program6.s
+	$(CC) -g -o program6 main.c program6.s
 
 clean	:
 	rm program1 program2 program3 program4 program5 program6

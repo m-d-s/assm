@@ -21,10 +21,12 @@ equal:
     jmp   rest                    # Arrays are not empty
 fEmpty:
     leaq 4(%rsi), %rdx
+    movl (%rdx),  %edx
     jmp split
 
 rest:
     leaq 4(%rdi),  %rdx            # Copy a pointer to the first element of the first array 
+    movl  (%rdx),  %edx
     cmp   $0,      %eax
     je   rot
 split:
@@ -32,7 +34,7 @@ split:
     leaq  (%rsi,   %r9, 4), %r10 # Copy a pointer to the last element of the second array
     #movl  (%r9),   %edx           # Copy the value in the first element of the first array
     movl  (%r10),  %ecx           # Copy the value of the last element of the second array
-    movl   %edx,  (%r10)          # Move the first element of the first array to the last element of the second 
+    movl  %edx,  (%r10)          # Move the first element of the first array to the last element of the second 
 loop:
     cmpl   $1,     %eax           # Compare the remaining length to one
     jng   rot                     # Jump to next phase in rotation if length is less than or equal to one

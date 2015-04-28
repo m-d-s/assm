@@ -12,8 +12,6 @@ f:
     je    equal                   # Jump past singularly empty comparison if equal
     cmpl   $0,     %ecx           # See if the first array is empty
     je    fEmpty                  # First array is empty
-    cmpl   $0,     %eax           # See if the second array is empty
-    je    sEmpty                  # Second array is empty
     jmp   rest                    # Array length unequal and both arrays non empty
 ### This is where your code ends ...
 
@@ -22,18 +20,17 @@ equal:
     je    done                    # Then both arrays are empty
     jmp   rest                    # Arrays are not empty
 fEmpty:
-
-    jmp done
-
-sEmpty:
-
-    jmp done
+    leaq 4(%rsi), %rdx
+    jmp split
 
 rest:
-    leaq 4(%rdi),  %r9            # Copy a pointer to the first element of the first array 
-    movslq %eax,   %rdx           # Sign extend the length of the second array for indexed access
-    leaq  (%rsi,   %rdx, 4), %r10 # Copy a pointer to the last element of the second array
-    movl  (%r9),   %edx           # Copy the value in the first element of the first array
+    leaq 4(%rdi),  %rdx            # Copy a pointer to the first element of the first array 
+    cmp   $0,      %eax
+    je   rot
+split:
+    movslq %eax,   %r9           # Sign extend the length of the second array for indexed access
+    leaq  (%rsi,   %r9, 4), %r10 # Copy a pointer to the last element of the second array
+    #movl  (%r9),   %edx           # Copy the value in the first element of the first array
     movl  (%r10),  %ecx           # Copy the value of the last element of the second array
     movl   %edx,  (%r10)          # Move the first element of the first array to the last element of the second 
 loop:
@@ -48,8 +45,14 @@ loop:
     
 rot:
     movl  (%rdi),  %eax           # Copy the length of the first array
-    movslq %eax,   %rdx           # Sign extend the length of the array for indexed access
-    leaq  (%rdi,   %rdx, 4), %r10 # Point to the last index in the first array 
+    cmpl   $0,     %eax           # Check if the length is zero
+    je    houseKeep               # If length was zero skip this array
+    movslq %eax,   %r9           # Sign extend the length of the array for indexed access
+    leaq  (%rdi,   %r9, 4), %r10 # Point to the last index in the first array 
+    cmpl   $0,     (%rsi)
+    jne   skip
+    xchgl  %ecx,   %edx
+skip:
     movl  (%r10),  %edx           # Copy the value at that index
     movl   %ecx,  (%r10)          # Replace the value at that index with the rotated value
 otLoop: 
